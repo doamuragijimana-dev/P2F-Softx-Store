@@ -3,48 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2F Softx Store - Free Software Downloads</title>
     <link rel="stylesheet" href="styles.css">
-    <title>Softx Store</title>
-    <script src="firebase-config.js" defer></script>
-    <script src="admin-panel.js" defer></script>
-    <script src="ads-system.js" defer></script>
-    <script src="download-system.js" defer></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Softx Store</h1>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">🎯 P2F Softx Store</h1>
+            <nav>
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#software" class="nav-link">Software</a>
+                <a href="#admin-panel" class="nav-link" id="adminBtn">Admin Panel</a>
+                <a href="#about" class="nav-link">About</a>
+            </nav>
+        </div>
     </header>
-    <main>
-        <section>
-            <h2>Software Management</h2>
-            <button id="loadSoftware">Load Software</button>
-            <script>
-                document.getElementById('loadSoftware').addEventListener('click', function() {
-                    // Call admin function here with Firebase integration
-                    loadSoftwareWithFirebase();
-                });
-            </script>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <h2>Download Premium Software for FREE</h2>
+            <p>Windows 11 Pro, Microsoft Office, and more - completely free with our ads system!</p>
         </section>
-        <section>
-            <h2>Ads Display</h2>
-            <div id="adsContainer"></div>
-            <script>
-                displayAds();
-            </script>
+
+        <!-- Software Catalog Section -->
+        <section id="software" class="software-section">
+            <h2>Available Software</h2>
+            <div id="softwareList" class="software-grid">
+                <p class="loading">Loading software...</p>
+            </div>
         </section>
-        <section>
-            <h2>Download Tracking</h2>
-            <button id="trackDownload">Track Download</button>
-            <script>
-                document.getElementById('trackDownload').addEventListener('click', function() {
-                    // Call download tracking function
-                    trackDownload();
-                });
-            </script>
+
+        <!-- Admin Panel Section (Hidden by default) -->
+        <section id="admin-panel" class="admin-panel" style="display: none;">
+            <h2>Admin Control Panel</h2>
+            
+            <!-- Admin Login -->
+            <div id="admin-login" class="admin-section">
+                <h3>Admin Login</h3>
+                <input type="email" id="adminEmail" placeholder="Admin Email" />
+                <input type="password" id="adminPassword" placeholder="Admin Password" />
+                <button onclick="adminLogin()">Login</button>
+                <p id="loginStatus"></p>
+            </div>
+
+            <!-- Add Software Form (Hidden until logged in) -->
+            <div id="add-software-form" class="admin-section" style="display: none;">
+                <h3>Add New Software</h3>
+                <form>
+                    <input type="text" id="softwareName" placeholder="Software Name" required />
+                    <input type="text" id="softwareVersion" placeholder="Version" required />
+                    <textarea id="softwareDescription" placeholder="Description" rows="3"></textarea>
+                    <input type="file" id="softwareFile" placeholder="Select File" required />
+                    <button type="button" onclick="addSoftware()">Upload Software</button>
+                </form>
+                <p id="softwareUploadStatus"></p>
+            </div>
+
+            <!-- Add Custom Ads Form (Hidden until logged in) -->
+            <div id="add-ads-form" class="admin-section" style="display: none;">
+                <h3>Add Custom Ads</h3>
+                <form>
+                    <input type="text" id="softwareIdForAd" placeholder="Software ID" required />
+                    <input type="text" id="adTitle" placeholder="Ad Title" required />
+                    <select id="adType" required>
+                        <option value="">Select Ad Type</option>
+                        <option value="image">Image Ad</option>
+                        <option value="video">Video Ad</option>
+                        <option value="registration">Registration</option>
+                    </select>
+                    <input type="file" id="adContent" placeholder="Select Image/Video" required />
+                    <input type="url" id="adRedirectUrl" placeholder="Redirect URL (optional)" />
+                    <input type="number" id="adCount" placeholder="Number of Times to Show" value="1" required />
+                    <button type="button" onclick="addCustomAd()">Add Ad</button>
+                </form>
+                <p id="adUploadStatus"></p>
+            </div>
+
+            <!-- Logout Button (Hidden until logged in) -->
+            <div id="logout-section" style="display: none;">
+                <button onclick="adminLogout()" class="logout-btn">Logout</button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <h2>About P2F Softx Store</h2>
+            <p>We provide premium software downloads completely free! To sustain our service, we display advertisements. Admin can add their own custom ads (videos, images, or registration forms) which will be shown before downloads. If admin ads run out, system ads (Adsterra) will be displayed.</p>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2026 Softx Store</p>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 P2F Softx Store. All rights reserved.</p>
+        <p>Download premium software for free with our innovative ads system!</p>
     </footer>
+
+    <!-- Firebase Configuration -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+        const auth = firebase.auth();
+    </script>
+
+    <!-- Application Scripts -->
+    <script src="ads-system.js" type="module"></script>
+    <script src="download-system.js" type="module"></script>
+    <script src="admin-panel.js" type="module"></script>
+    <script src="app.js" type="module"></script>
+
 </body>
 </html>
