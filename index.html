@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Softx Store</title>
+    <script src="firebase-config.js" defer></script>
+    <script src="admin-panel.js" defer></script>
+    <script src="ads-system.js" defer></script>
+    <script src="download-system.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Softx Store</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Software Management</h2>
+            <button id="loadSoftware">Load Software</button>
+            <script>
+                document.getElementById('loadSoftware').addEventListener('click', function() {
+                    // Call admin function here with Firebase integration
+                    loadSoftwareWithFirebase();
+                });
+            </script>
+        </section>
+        <section>
+            <h2>Ads Display</h2>
+            <div id="adsContainer"></div>
+            <script>
+                displayAds();
+            </script>
+        </section>
+        <section>
+            <h2>Download Tracking</h2>
+            <button id="trackDownload">Track Download</button>
+            <script>
+                document.getElementById('trackDownload').addEventListener('click', function() {
+                    // Call download tracking function
+                    trackDownload();
+                });
+            </script>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Softx Store</p>
+    </footer>
+</body>
+</html>
